@@ -1,7 +1,8 @@
 # simON-reads
 
 ## General purpose and application
-simON-reads ("Simulate Oxford Nanopore Reads") is a simple yet powerful tool to generate fastq files containing MiniON-like long reads: this python script generates artificial DNA sequencing reads with specified variations and errors for given reference sequences. It utilizes the BioPython library for handling DNA sequences and provides options to introduce single nucleotide polymorphisms (SNPs) and sequencing errors.
+**simON-reads** ("Simulate Oxford Nanopore Reads") is a simple yet powerful tool to generate fastq files containing MiniON-like long reads: this python script generates artificial DNA sequencing reads with specified variations and errors for given reference sequences. It utilizes the BioPython library for handling DNA sequences and provides options to introduce single nucleotide polymorphisms (SNPs) and sequencing errors.
+
 simON-reads, thus, represent a flexible and customizable tool for generating artificial DNA sequencing data, making it valuable for testing and validating bioinformatics softwares and pipelines. The introduced variations and errors simulate real-world scenarios, allowing for thorough testing of downstream analysis pipelines.
 
 ## Installation
