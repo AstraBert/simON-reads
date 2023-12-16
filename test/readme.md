@@ -12,12 +12,12 @@ The names of the loci are hereby reported, alongside with the species they where
 To generate data in Linux, run:
 
 ```bash
-simON_reads.py -i reference.fasta -snp 28S-rRNA:3:G>T,28S-rRNA:41:C>G,S7:0:A>G,S7:63:C>T -n 1000 > test.fastq
+simON_reads.py -i reference.fasta -snp "28S-rRNA:3:G>T,28S-rRNA:41:C>G,S7:0:A>G,S7:63:C>T" -n 1000 > test.fastq
 ```
 
 If you are in Windows:
 ```powershell
-python3 .\simON_reads.py -i .\reference.fasta -snp 28S-rRNA:3:G>T,28S-rRNA:41:C>G,S7:0:A>G,S7:63:C>T -n 1000 > .\test.fastq
+python3 .\simON_reads.py -i .\reference.fasta -snp "28S-rRNA:3:G>T,28S-rRNA:41:C>G,S7:0:A>G,S7:63:C>T" -n 1000 > .\test.fastq
 ```
 
 Always remember to redirect the stream to your desidered file, unless you want it to be printed on the standard output of your terminal.
