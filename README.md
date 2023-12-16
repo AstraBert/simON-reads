@@ -5,7 +5,27 @@
 
 simON-reads, thus, represent a flexible and customizable tool for generating artificial DNA sequencing data, making it valuable for testing and validating bioinformatics softwares and pipelines. The introduced variations and errors simulate real-world scenarios, allowing for thorough testing of downstream analysis pipelines.
 
-## Installation
+## Installation on Windows
+The basic requirment for Windows installation is to have [python3.10 or higher](https://www.python.org/downloads/) up and running on your Windows machine. If you don't match this pre-requisite, consider downloading it from the dedicated page.
+
+After having fulfilled this requirement, go on and:
+
+1. Download the .zip "Code source" file from the latest release
+2. Unzip the downloaded folder with your favourite tool (such as WinRAR)
+3. Install the necessary dependencies with:
+   ```powershell
+   python3 -m pip install biopython
+   python3 -m pip install matplotlib
+   ```
+4. You can now run the script with python3:
+  ```powershell
+   cd Downloads\simON-reads-1.0.0
+   python3 .\simON-reads-1.0.0\scripts\simON_reads.py -h 
+   ```
+The script was conceived for Linux-like operating systems, but should be fine also on Windows: nevertheless, feel free to report issues if you encounter them!
+
+## Installation on Linux or Linux-like systems
+The basic requirment for this installation is to have  [Mamba](https://mamba.readthedocs.io/en/latest/installation/mamba-installation.html) and [Conda](https://conda.io/projects/conda/en/latest/user-guide/install/index.html) up and running on your Linux machine. If you don't match this pre-requisite, consider downloading them from the dedicated pages.
 
 1. Clone the current GitHub repository by running:
    ```bash
