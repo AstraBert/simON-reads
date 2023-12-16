@@ -46,7 +46,7 @@ The basic requirment for this installation is to have  [Mamba](https://mamba.rea
 ## Options and testing
 The script comes with three viable option (one is required, the other two are optional)
 ```
-simON_reads.py -i, --infile INFILE [-snp, --single_nucleotide_polymorphism SAMPLE:POS:REF>ALT,SAMPLE:POS:REF>ALT,...] [-n, --nreads READS_NUMBER]
+simON_reads.py -i, --infile INFILE [-snp, --single_nucleotide_polymorphism "SAMPLE:POS:REF>ALT,SAMPLE:POS:REF>ALT,..."] [-n, --nreads READS_NUMBER]
 
 -i or --infile: Path to the input FASTA file containing the reference sequence(s).
 
@@ -64,7 +64,7 @@ Input simON_reads.py -h,--help to show the help message
 You will find a test sample of reference sequences in the test folder; to try the script, you can run:
 ```bash
 cd ./test
-simON_reads.py -i reference.fasta -snp 28S-rRNA:3:G>T,28S-rRNA:41:C>G,S7:0:A>G,S7:63:C>T -n 1000 > test.fastq
+simON_reads.py -i reference.fasta -snp "28S-rRNA:3:G>T,28S-rRNA:41:C>G,S7:0:A>G,S7:63:C>T" -n 1000 > test.fastq
 ```
 Always remember to redirect the stream to your desidered file, unless you want it to be printed on the standard output of your terminal.
 
