@@ -20,7 +20,7 @@ nr = args.nreads
 if __name__=="__main__":
     start = datetime.now()
     dic=load_data(inf) ## Load reference sequences from infile
-    avgs=seqs_to_file(dic,snpstring) ## Generate reads and print them
+    avgs=seqs_to_file(dic,snpstring,nr) ## Generate reads and print them
     end=datetime.now()
     plt.style.use('ggplot') ## Plot average read quality as histogram, show it and save it as avg_quality_distribution.png in current directory
     fig,ax=plt.subplots(figsize=(10,5))
