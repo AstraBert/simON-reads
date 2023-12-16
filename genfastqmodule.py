@@ -57,6 +57,7 @@ def ascii_conv_and_mean(line):
 
 
 def quality_string(seq):
+    """Produce random quality string with ASCII phred score code (from 1 to 30)"""
     keys =['!', '"', '#', '$', '%', '&', "'", '(', ')', '*', '+', ',', '-', '.', '/', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ':', ';', '<', '=', '>', '?', '@', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I']
     qlt = []
     for i in seq:
@@ -66,6 +67,7 @@ def quality_string(seq):
     return quality
 
 def generate_snp(snp_string, seq, header):
+    """Insert SNP variation in the provided seq, starting from header and information provided with --single_nucleotide_polymorphism"""
     if snp_string == "NO_SNP":
         return False
     else:
@@ -73,40 +75,40 @@ def generate_snp(snp_string, seq, header):
         bl=False
         for i in SNPs:
             a=i.split(":")
-            if a[0] == header:
+            if a[0] == header: ## There is the possibility to insert every SNP referred to the sequence we are examining 
                 n=r.random()
-                if seq[int(a[1])] == a[2].split(">")[0] and n>0.5:
+                if seq[int(a[1])] == a[2].split(">")[0] and n>0.5: ## insert SNP more or less 50% of the times
                     seq=seq[:int(a[1])]+a[2].split(">")[1]+seq[int(a[1])+1:]
                     bl=True
                     return seq
-                elif seq[int(a[1])] != a[2].split(">")[0] and n>0.5:
+                elif seq[int(a[1])] != a[2].split(">")[0] and n>0.5: ## Warn that the information provided in the SNP string is not correct, so the outcome might not be the same as expected
                     seq=seq[:int(a[1])]+a[2].split(">")[1]+seq[int(a[1])+1:]
                     bl=True
                     print("WARNING! SNP " + i + " do not match given genomic information; ignoring REF allele information...", file=sys.stderr)
                     return seq
-                    
-
                 else:
                     pass
             else:
                 pass        
-        if bl==False:
+        if bl==False: ## if the sequence is not modified with SNP, return it
             return seq
 
 
 
-def homopolymers(s):
-    a = re.compile(r'A{5,}')
+def homopolymers(s): 
+    """Find homopolymeric regions, with 4 or more repeated nucleotides, such as AAAA, and return a dictionary that contains the starting site of each homopolymeric strain"""
+    a = re.compile(r'A{4,}')
     amatches = a.finditer(s)
-    t = re.compile(r'T{5,}')
+    t = re.compile(r'T{4,}')
     tmatches = t.finditer(s)
-    c = re.compile(r'C{5,}')
+    c = re.compile(r'C{4,}')
     cmatches = c.finditer(s)
-    g = re.compile(r'G{5,}')
+    g = re.compile(r'G{4,}')
     gmatches = g.finditer(s)
     return {'A':[match.start() for match in amatches],'T':[match.start() for match in tmatches],'C':[match.start() for match in cmatches],'G':[match.start() for match in gmatches]}
 
 def perform_random_mutation(seq):
+    """Perform a single nucleotide variant sequencing error or an indel error with 5% of the chance, perform a delition with 5% of the chance"""
     combinations = [
     'A', 'C', 'G', 'T',
     'AA', 'AC', 'AG', 'AT',
@@ -130,11 +132,11 @@ def perform_random_mutation(seq):
     'TGA', 'TGC', 'TGG', 'TGT',
     'TTA', 'TTC', 'TTG', 'TTT']
     n=r.random()
-    if n<=0.05:
+    if n<=0.05: # SNVs and INDELs error
         g = ceil(r.random()*(len(seq)-1))
         seq=seq[:g]+combinations[ceil(r.random()*(len(combinations)-1))]+seq[g+1:]
         return seq
-    elif 0.05<n<=0.1:
+    elif 0.05<n<=0.1: # Delition error
         g = ceil(r.random()*(len(seq)-1))
         seq=seq[:g]+seq[g+1:]
         return seq
@@ -142,45 +144,47 @@ def perform_random_mutation(seq):
         return seq
 
 def perform_homopolimer_mutation(seq, hp):
+    """Insert am extra nucleotide to a homopolimeric site with 30% of the chances""" 
     ks=[]
-    for i in list(hp.keys()):
-        if len(hp[i])>0:
+    for i in list(hp.keys()): 
+        if len(hp[i])>0: ## Check if there are homopolimers
             ks.append(i)
         else:
             pass
-    ind=ceil(r.random()*(len(ks)-1))
-    ind2=ceil(r.random()*(len(hp[ks[ind]])-1))
+    ind=ceil(r.random()*(len(ks)-1)) ## Choose a random homopolimeric nucleotide 
+    ind2=ceil(r.random()*(len(hp[ks[ind]])-1)) ## Choose a random homopolimeric site from that nucleotide
     n = r.random()
     if n <= 0.3:
-        seq=seq[:ind2]+ks[ind]+seq[ind2+1:]
+        seq=seq[:ind2]+ks[ind]+seq[ind2+1:] ## Insert the extra nucleotide (from AAAAA > AAAAAA)
         return seq
     return seq
 
 
-def seqs_to_file(genomes_dict, snp_string):
+def seqs_to_file(genomes_dict, snp_string,nreads):
+    """Write a specified number of reads for each of the provided reference sequences (with a 5% of them being reverse complemented and a 0.5% being chimeric), inserting SNPs and random sequencing errors in them""" 
     genomes_list = [value for value in list(genomes_dict.values())]
     headers = [key for key in list(genomes_dict.keys())]
     seqs=[]
     for i in range(len(headers)):
         hp = homopolymers(genomes_list[i])
-        revcomp=[int(1999*r.random()) for k in range(100)]
-        chimers=[int(1999*r.random()) for k in range(10) if k not in revcomp]
-        for j in range(2000):
-            if j in revcomp:
+        revcomp=[int(nreads*r.random()) for k in range(int(nreads*0.05))] ## Add 5% of reverse complemented reads
+        chimers=[int(nreads*r.random()) for k in range(int(nreads*0.005)) if k not in revcomp] ## Add 0.5% of chimeric reads 
+        for j in range(nreads):
+            if j in revcomp: ## Create reverse complemented reads
                 seq=generate_snp(snp_string, genomes_list[i], headers[i])
                 seq=perform_random_mutation(seq)
                 seq=perform_homopolimer_mutation(seq,hp)
                 seqs.append(reverse_complement(seq))
-            elif j in chimers:
+            elif j in chimers: ## Create chimeric reads by merging two sequences
                 n=ceil(r.random()*(len(genomes_list)-1))
                 seq=genomes_list[n]+genomes_list[n-1]
                 seqs.append(seq)
-            else:
+            else: ## Create a normal read
                 seq=generate_snp(snp_string, genomes_list[i], headers[i])
                 seq=perform_random_mutation(seq)
                 seq=perform_homopolimer_mutation(seq,hp)
                 seqs.append(seq)
-    means=[]
+    means=[] ## Calculate the average base quality
     for i in range(len(seqs)):
         print("@seq"+str(i+1))
         print(seqs[i])
@@ -189,4 +193,4 @@ def seqs_to_file(genomes_dict, snp_string):
         print(qt)
         means.append(ascii_conv_and_mean(qt))
     return means
-        
+    
