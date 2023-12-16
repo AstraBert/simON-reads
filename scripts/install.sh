@@ -51,13 +51,19 @@ mamba install \
    -y \
    biopython 
 
+mamba install \
+   -c conda-forge \
+   -y \
+   dos2unix
+
 ## DEACTIVATE
 conda deactivate
 
 # make exectuable and change the interpreter to the python installation in the environment
-echo \#\!${basedir}/environments/simON-reads/bin/python3.10 \
-   >${basedir}/environments/simON-reads/bin/simON_reads.py
+cp -n ${basedir}/simON_reads_module.py ${basedir}/environments/simON-reads/bin/simON_reads_module.py
+echo \#\!${basedir}/environments/simON-reads/bin/python3.10 > ${basedir}/environments/simON-reads/bin/simON_reads.py
 awk 'NR>1' ${basedir}/simON_reads.py >>${basedir}/environments/simON-reads/bin/simON_reads.py
+dos2unix ${basedir}/environments/simON-reads/bin/simON_reads.py
 chmod 755 ${basedir}/environments/simON-reads/bin/simON_reads.py
 
 echo "Installation process is now completed"
