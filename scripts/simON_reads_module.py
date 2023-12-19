@@ -160,7 +160,7 @@ def perform_homopolimer_mutation(seq, hp):
     return seq
 
 
-def seqs_to_file(genomes_dict, snp_string,nreads):
+def seqs_to_file(genomes_dict, snp_string,nreads, enabled_hompolymer, enabled_sequencing_error):
     """Write a specified number of reads for each of the provided reference sequences (with a 5% of them being reverse complemented and a 0.5% being chimeric), inserting SNPs and random sequencing errors in them""" 
     genomes_list = [value for value in list(genomes_dict.values())]
     headers = [key for key in list(genomes_dict.keys())]
@@ -172,8 +172,10 @@ def seqs_to_file(genomes_dict, snp_string,nreads):
         for j in range(nreads):
             if j in revcomp: ## Create reverse complemented reads
                 seq=generate_snp(snp_string, genomes_list[i], headers[i])
-                seq=perform_random_mutation(seq)
-                seq=perform_homopolimer_mutation(seq,hp)
+                if enabled_sequencing_error:
+                    seq=perform_random_mutation(seq)
+                if enabled_hompolymer:
+                    seq=perform_homopolimer_mutation(seq,hp)
                 seqs.append(reverse_complement(seq))
             elif j in chimers: ## Create chimeric reads by merging two sequences
                 n=ceil(r.random()*(len(genomes_list)-1))
@@ -181,8 +183,10 @@ def seqs_to_file(genomes_dict, snp_string,nreads):
                 seqs.append(seq)
             else: ## Create a normal read
                 seq=generate_snp(snp_string, genomes_list[i], headers[i])
-                seq=perform_random_mutation(seq)
-                seq=perform_homopolimer_mutation(seq,hp)
+                if enabled_sequencing_error:
+                    seq=perform_random_mutation(seq)
+                if enabled_hompolymer:
+                    seq=perform_homopolimer_mutation(seq,hp)
                 seqs.append(seq)
     means=[] ## Calculate the average base quality
     for i in range(len(seqs)):
@@ -193,4 +197,3 @@ def seqs_to_file(genomes_dict, snp_string,nreads):
         print(qt)
         means.append(ascii_conv_and_mean(qt))
     return means
-    
