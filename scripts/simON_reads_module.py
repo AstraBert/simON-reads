@@ -1,3 +1,12 @@
+"""
+
+Python 3.10 or higher
+
+@author: Astra Bertelli
+
+Functions to generate MinION-like long reads to store in artificial fastq files
+
+"""
 import gzip
 import random as r
 from math import ceil
