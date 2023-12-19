@@ -46,8 +46,10 @@ The basic requirment for this installation is to have  [Mamba](https://mamba.rea
 ## Options and testing
 The script comes with three viable option (one is required, the other two are optional)
 ```
-simON_reads.py -i, --infile INFILE [-snp, --single_nucleotide_polymorphism "SAMPLE:POS:REF>ALT,SAMPLE:POS:REF>ALT,..."]
-[-n, --nreads READS_NUMBER] [-ese, --enable_sequencing_error] [-ehp, --enable_homopolymer_error]
+simON_reads.py [-v,--version] -i, --infile INFILE [-snp, --single_nucleotide_polymorphism "SAMPLE:POS:REF>ALT,..."]
+[-n, --nreads READS_NUMBER] [-ese, --enable_sequencing_error] [-ehp, --enable_homopolymer_error] 
+
+-v or --version: Print the version of the code
 
 -i or --infile: Path to the input FASTA file containing the reference sequence(s).
 
@@ -59,9 +61,9 @@ ALT is the alternative allele you want to be put. This will generate a diploid-l
 
 -n or --nread: Number of reads to generate for each reference sequence (default is 2000).
 
--ehp, --enable_homopolymer_error  : This will set a 30% chance of getting an extra nucleotide around homopolymeric regions
+-ehp or --enable_homopolymer_error  : This will set a 30% chance of getting an extra nucleotide around homopolymeric regions
 
--ese, --enable_sequencing_error   : This will set a 5% chance of getting a random single nucleotide variant or insertion,
+-ese or --enable_sequencing_error   : This will set a 5% chance of getting a random single nucleotide variant or insertion,
 while it retains also a 5% chance of skipping a base (single deletion)
 
 Input simON_reads.py -h,--help to show the help message
