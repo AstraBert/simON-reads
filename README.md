@@ -46,7 +46,8 @@ The basic requirment for this installation is to have  [Mamba](https://mamba.rea
 ## Options and testing
 The script comes with three viable option (one is required, the other two are optional)
 ```
-simON_reads.py -i, --infile INFILE [-snp, --single_nucleotide_polymorphism "SAMPLE:POS:REF>ALT,SAMPLE:POS:REF>ALT,..."] [-n, --nreads READS_NUMBER]
+simON_reads.py -i, --infile INFILE [-snp, --single_nucleotide_polymorphism "SAMPLE:POS:REF>ALT,SAMPLE:POS:REF>ALT,..."]
+[-n, --nreads READS_NUMBER] [-ese, --enable_sequencing_error] [-ehp, --enable_homopolymer_error]
 
 -i or --infile: Path to the input FASTA file containing the reference sequence(s).
 
@@ -58,14 +59,26 @@ ALT is the alternative allele you want to be put. This will generate a diploid-l
 
 -n or --nread: Number of reads to generate for each reference sequence (default is 2000).
 
+-ehp, --enable_homopolymer_error  : This will set a 30% chance of getting an extra nucleotide around homopolymeric regions
+
+-ese, --enable_sequencing_error   : This will set a 5% chance of getting a random single nucleotide variant or insertion,
+while it retains also a 5% chance of skipping a base (single deletion)
+
 Input simON_reads.py -h,--help to show the help message
 ```
 
-You will find a test sample of reference sequences in the test folder; to try the script, you can run:
+You will find a test sample of reference sequences in the test folder; to try the script that only generate SNPs, you can run:
 ```bash
 cd ./test
-simON_reads.py -i reference.fasta -snp "28S-rRNA:3:G>T,28S-rRNA:41:C>G,S7:0:A>G,S7:63:C>T" -n 1000 > test.fastq
+simON_reads.py -i reference.fasta -snp "28S-rRNA:3:G>T,28S-rRNA:41:C>G,S7:0:A>G,S7:63:C>T" -n 1000 > test_SNP.fastq
 ```
+
+If you also want to mock the sequencing error process and you also want homopolymer error, you can run:
+```bash
+cd ./test
+simON_reads.py -i reference.fasta -snp "28S-rRNA:3:G>T,28S-rRNA:41:C>G,S7:0:A>G,S7:63:C>T" -n 1000 --enable_homopolymer_error --enable_sequencing_error > test_SEQERR.fastq
+```
+
 Always remember to redirect the stream to your desidered file, unless you want it to be printed on the standard output of your terminal.
 
 ## Output
