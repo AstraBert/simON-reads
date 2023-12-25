@@ -7,6 +7,7 @@ Python 3.10 or higher
 Functions to generate MinION-like long reads to store in artificial fastq files
 
 """
+
 import gzip
 import random as r
 from math import ceil
@@ -81,26 +82,22 @@ def generate_snp(snp_string, seq, header):
         return False
     else:
         SNPs=snp_string.split(",")
-        bl=False
+        seq_snps = {}
         for i in SNPs:
             a=i.split(":")
             if a[0] == header: ## There is the possibility to insert every SNP referred to the sequence we are examining 
                 n=r.random()
-                if seq[int(a[1])] == a[2].split(">")[0] and n>0.5: ## insert SNP more or less 50% of the times
-                    seq=seq[:int(a[1])]+a[2].split(">")[1]+seq[int(a[1])+1:]
-                    bl=True
-                    return seq
-                elif seq[int(a[1])] != a[2].split(">")[0] and n>0.5: ## Warn that the information provided in the SNP string is not correct, so the outcome might not be the same as expected
-                    seq=seq[:int(a[1])]+a[2].split(">")[1]+seq[int(a[1])+1:]
-                    bl=True
-                    print("WARNING! SNP " + i + " do not match given genomic information; ignoring REF allele information...", file=sys.stderr)
-                    return seq
-                else:
-                    pass
+                seq_snps.update({int(a[1]):[a[2].split(">")[0], a[2].split(">")[1]]})
+        for key in list(seq_snps.keys()):
+            n = r.random()
+            if seq[key] == seq_snps[key][0] and n>0.5: ## insert SNP more or less 50% of the times
+                seq=seq[:key]+seq_snps[key][1]+seq[key+1:]
+            elif seq[int(a[1])] != a[2].split(">")[0] and n>0.5: ## Warn that the information provided in the SNP string is not correct, so the outcome might not be the same as expected
+                seq=seq[:key]+seq_snps[key][1]+seq[key+1:]
+                print("WARNING! SNP in position " + str(key) + " do not match given genomic information; ignoring REF allele information...", file=sys.stderr)
             else:
-                pass        
-        if bl==False: ## if the sequence is not modified with SNP, return it
-            return seq
+                pass
+        return seq
 
 
 
@@ -206,3 +203,4 @@ def seqs_to_file(genomes_dict, snp_string,nreads, enabled_hompolymer, enabled_se
         print(qt)
         means.append(ascii_conv_and_mean(qt))
     return means
+    
