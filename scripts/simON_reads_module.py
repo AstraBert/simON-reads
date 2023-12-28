@@ -79,25 +79,25 @@ def quality_string(seq):
 def generate_snp(snp_string, seq, header):
     """Insert SNP variation in the provided seq, starting from header and information provided with --single_nucleotide_polymorphism"""
     if snp_string == "NO_SNP":
-        return False
+        pass
     else:
         SNPs=snp_string.split(",")
         seq_snps = {}
         for i in SNPs:
             a=i.split(":")
-            if a[0] == header: ## There is the possibility to insert every SNP referred to the sequence we are examining 
-                n=r.random()
-                seq_snps.update({int(a[1]):[a[2].split(">")[0], a[2].split(">")[1]]})
+            if a[0] == header: ## There is the possibility to insert every SNP referred to the sequence we are examining
+                seq_snps.update({int(a[1]):[a[2].split(">")[0], a[2].split(">")[1], int(a[3])]})
+        n = int(round(r.random(),0))
         for key in list(seq_snps.keys()):
-            n = r.random()
-            if seq[key] == seq_snps[key][0] and n>0.5: ## insert SNP more or less 50% of the times
+            if seq[key] == seq_snps[key][0] and seq_snps[key][2]==n: ## insert SNP more or less 50% of the times
                 seq=seq[:key]+seq_snps[key][1]+seq[key+1:]
-            elif seq[int(a[1])] != a[2].split(">")[0] and n>0.5: ## Warn that the information provided in the SNP string is not correct, so the outcome might not be the same as expected
+            elif seq[key] != seq_snps[key][0] and seq_snps[key][2]==n: ## Warn that the information provided in the SNP string is not correct, so the outcome might not be the same as expected
                 seq=seq[:key]+seq_snps[key][1]+seq[key+1:]
-                print("WARNING! SNP in position " + str(key) + " do not match given genomic information; ignoring REF allele information...", file=sys.stderr)
+                print("WARNING! SNP in position " + str(key) + " for sequence " + str(header) + " do not match given genomic information; ignoring REF allele information...", file=sys.stderr)
             else:
                 pass
-        return seq
+    return seq
+
 
 
 
