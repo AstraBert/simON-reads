@@ -46,7 +46,8 @@ The basic requirment for this installation is to have  [Mamba](https://mamba.rea
 ## Options and testing
 The script comes with three viable option (one is required, the other two are optional)
 ```
-simON_reads.py [-v,--version] -i, --infile INFILE [-snp, --single_nucleotide_polymorphism "SAMPLE:POS:REF>ALT:1/0,..."]
+simON_reads.py [-v,--version] -i, --infile INFILE
+[-snp, --single_nucleotide_polymorphism "SAMPLE:POS:REF>ALT:1/0,..."]
 [-n, --nreads READS_NUMBER] [-ese, --enable_sequencing_error] [-ehp, --enable_homopolymer_error] 
 
 -v or --version: Print the version of the code
@@ -57,7 +58,9 @@ simON_reads.py [-v,--version] -i, --infile INFILE [-snp, --single_nucleotide_pol
 Insert a single nucleotide variant; the syntax of this option should be SAMPLE:POS:REF>ALT,SAMPLE:POS:REF>ALT:1/0,...,SAMPLE:POS:REF>ALT:1/0
 (it should be separated by commas without blank spaces) where SAMPLE is the header of the sequence (withouth ">") in the original
 fasta file, POS is an integer that indicates the position (0-based) of the polymorphic site, REF is the reference allele,
-ALT is the alternative allele you want to be put and 1/0 (where you should report either 1 or 0, not both of them) is the haplotype phasing information: all the SNPs referred to 1 will endup on the same sequences, separate from the ones attributed to 0: this will generate a diploid-like distribution of variants. (Default is "NO_SNP")
+ALT is the alternative allele you want to be put and 1/0 (where you should report either 1 or 0, not both of them)
+is the haplotype phasing information: all the SNPs referred to 1 will endup on the same sequences, separate from
+the ones attributed to 0: this will generate a diploid-like distribution of variants. (Default is "NO_SNP")
 
 -n or --nread: Number of reads to generate for each reference sequence (default is 2000).
 
