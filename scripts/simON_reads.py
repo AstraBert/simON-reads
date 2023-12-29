@@ -34,7 +34,7 @@ enhompol= args.enable_homopolymer_error
 enseqerr= args.enable_sequencing_error
 vers = args.version
 
-__version__="2.0.0"
+__version__="2.0.1"
 
 if __name__=="__main__":
     if vers:
